@@ -3,7 +3,6 @@ package main
 import (
 	"code.google.com/p/go.net/websocket"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"net/rpc"
@@ -39,28 +38,6 @@ func (t *Arith) Echo(arg *string, reply *string) error {
 	log.Println("received:", *arg)
 	*reply = *arg
 	return nil
-}
-
-func Echo(ws *websocket.Conn) {
-	var err error
-
-	for {
-		var reply string
-
-		if err = websocket.Message.Receive(ws, &reply); err != nil {
-			fmt.Println("Can't receive")
-			break
-		}
-
-		fmt.Println("Received back from client: " + reply)
-
-		msg := "" + reply
-		fmt.Println("Sending to client: " + msg)
-
-		if err = websocket.Message.Send(ws, msg); err != nil {
-			break
-		}
-	}
 }
 
 var server *rpc.Server
