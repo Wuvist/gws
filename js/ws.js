@@ -1,5 +1,10 @@
 define(function () {
-	var wsuri = "ws://127.0.0.1:9999/_ws";
+	var wsuri;
+	if (window.location.protocol === "https:") {
+		wsuri = "wss:" +  "//" + window.location.host + "/_ws";
+	} else {
+		wsuri = "ws:" +  "//" + window.location.host + "/_ws";
+	}
 	var sock = new WebSocket(wsuri);
 	var _id = 0;
 	var isConnected = false;
