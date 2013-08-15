@@ -1,5 +1,5 @@
 define(function () {
-	var wsuri = "ws://127.0.0.1:9999";
+	var wsuri = "ws://127.0.0.1:9999/_ws";
 	var sock = new WebSocket(wsuri);
 	var _id = 0;
 	var isConnected = false;

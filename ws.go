@@ -43,15 +43,18 @@ func (t *Arith) Echo(arg *string, reply *string) error {
 var server *rpc.Server
 
 func WSRPC(ws *websocket.Conn) {
+	//Should be able to perform authentication(check cookie) here, can route to different server.
 	server.ServeCodec(jsonrpc.NewServerCodec(ws))
 }
 
 func main() {
+	log.Print("starting")
 	server = rpc.NewServer()
 	arith := new(Arith)
 	server.Register(arith)
 
-	http.Handle("/", websocket.Handler(WSRPC))
+	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.Handle("/_ws", websocket.Handler(WSRPC))
 
 	if err := http.ListenAndServe(":9999", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
