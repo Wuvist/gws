@@ -1,9 +1,11 @@
 requirejs.config({
-  baseUrl: 'js'
+  baseUrl: 'js',
+  urlArgs: "v=" + (new Date()).getTime()
 });
 
 require(['ws'], function(ws) {
-   ws.call("Arith.Multiply", [{"A":4, "B":4}], function(msg){
-      console.log("get answer:" + msg.result);
+   ws.call("Arith.Divide", [{"A":7, "B":4}], function(msg){
+      console.log("get answer:");
+      console.log(msg.result.Rem);
    });
 });

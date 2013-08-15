@@ -12,7 +12,7 @@ define(function () {
 		msgQueue.reverse();
 		var msg = msgQueue.pop();
 		while(msg) {
-			console.log("send: " + msg);
+			console.log("send : " + msg);
 			sock.send(msg);
 			msg = msgQueue.pop();
 		}
@@ -24,7 +24,7 @@ define(function () {
 
 	sock.onmessage = function(e) {
 		var msg = JSON.parse(e.data);
-		console.log("msg received:" + e.data);
+		console.log("onmsg: " + e.data);
 		var msgId = msg.id;
 		if(msgId) {
 			var cb = cbs[msgId];
