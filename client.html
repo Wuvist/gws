@@ -9,10 +9,21 @@
    <script data-main="js/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"></script>
 
 <body style="background-color: #e3e3e3">
-      <h1>WebSocket Echo Test</h1>
+      <h1>WebSocket Arith Test</h1>
       <form>
          <p>
-            Message: <input id="message" type="text" value="Hello, world!">
+            A: <input id="A" type="text" value="6">
+         </p>
+         <p>
+            Multiply <input id="method" name="method" type="radio" value="Multiply" checked />
+            <br />
+            Divide <input id="method" name="method" type="radio" value="Divide" />
+         </p>
+         <p>
+            B: <input id="B" type="text" value="4">
+         </p>
+         <p>
+            Equal <input id="answer" type="text" value="" readonly />
          </p>
       </form>
-      <button onclick="send();">Send Message</button>
+      <button id="Calculate">Calculate</button>

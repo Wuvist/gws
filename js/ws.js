@@ -24,6 +24,7 @@ define(function () {
 	}
 
 	sock.onclose = function(e) {
+		isConnected = false;
 		console.log("connection closed (" + e.code + ")");
 	}
 
@@ -48,7 +49,8 @@ define(function () {
 		}
 		var strMsg = JSON.stringify(msg);
 		if(isConnected) {
-			sock.send(strMsg);	
+			console.log("send : " + strMsg);
+			sock.send(strMsg);
 		} else {
 			msgQueue.push(strMsg);
 		}

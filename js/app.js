@@ -4,8 +4,9 @@ requirejs.config({
 });
 
 require(['ws'], function(ws) {
-   ws.call("Arith.Divide", [{"A":7, "B":4}], function(msg){
-      console.log("get answer:");
-      console.log(msg.result.Rem);
-   });
+   $("#Calculate").click(function(){
+      ws.call("Arith." + $("input[name='method']:checked").val(), [{"A": parseInt($("#A").val()), "B": parseInt($("#B").val())}], function(msg){
+         $("#answer").val(JSON.stringify(msg.result));
+      });      
+   })
 });
