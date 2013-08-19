@@ -8,16 +8,16 @@ import (
 	"net/http"
 )
 
-var stringcache = groupcache.NewGroup("Solr", 64<<20, groupcache.GetterFunc(
-	func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
-		resp, _ := http.Get(key)
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
+func getter(ctx groupcache.Context, key string, dest groupcache.Sink) error {
+	resp, _ := http.Get(key)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Printf("asking for %s from solr\n", key)
+	dest.SetString(string(body))
+	return nil
+}
 
-		log.Printf("asking for %s from solr\n", key)
-		dest.SetString(string(body))
-		return nil
-	}))
+var stringcache = groupcache.NewGroup("Solr", 64<<20, groupcache.GetterFunc(getter))
 
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
@@ -28,11 +28,20 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, s)
 }
 
-func main() {
+func startProxy() {
 	log.Print("starting")
-	http.HandleFunc("/select/", proxyHandler)
+	handler := http.NewServeMux()
+	handler.HandleFunc("/select/", proxyHandler)
+	server := &http.Server{Addr: ":8889", Handler: handler}
 
-	if err := http.ListenAndServe(":8889", nil); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
+}
+
+func main() {
+	c := make(chan int)
+	go startProxy()
+	//Prevent main thread exit
+	<-c
 }
