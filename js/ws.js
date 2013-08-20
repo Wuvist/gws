@@ -1,4 +1,6 @@
-define(function () {
+(function( ng, app ) {
+	"use strict";
+
 	var wsuri;
 	if (window.location.protocol === "https:") {
 		wsuri = "wss:" +  "//" + window.location.host + "/_ws";
@@ -10,6 +12,7 @@ define(function () {
 	var isConnected = false;
 	var msgQueue = Array();
 	var cbs = new Object();
+	var _scope;
 
 	sock.onopen = function() {
 		console.log("connected to " + wsuri);
@@ -36,32 +39,43 @@ define(function () {
 			var cb = cbs[msgId];
 			if(cb){
 				delete cbs[msgId];
-				cb(msg);
+				cb.resolve(msg);
+				_scope.$apply();
 			}
 		}
 	}
 
-	function _send(msg, cb) {
-		if (cb) {
-			_id += 1;
-			msg["id"] = _id;
-			cbs[_id] = cb;
-		}
-		var strMsg = JSON.stringify(msg);
-		if(isConnected) {
-			console.log("send : " + strMsg);
-			sock.send(strMsg);
-		} else {
-			msgQueue.push(strMsg);
-		}
-	}
+	app.service(
+		"wsService",
+		function($rootScope, $q) {
+			_scope = $rootScope;
+			function _send(msg, cb) {
+				_id += 1;
+				msg["id"] = _id;
+				cbs[_id] = cb;
+				var strMsg = JSON.stringify(msg);
+				if(isConnected) {
+					console.log("send : " + strMsg);
+					sock.send(strMsg);
+				} else {
+					msgQueue.push(strMsg);
+				}
+			}
 
-	return {
-		call: function(method, params, cb) {
-			var msg = {};
-			msg.method = method;
-			msg.params = params;
-			_send(msg, cb);
+			function call(method, params) {
+				var deferred = $q.defer();
+				var msg = {};
+				msg.method = method;
+				msg.params = params;
+				_send(msg, deferred);
+				return( deferred.promise );
+			}
+
+			// Return the public API.
+			return({
+				call: call
+			});
 		}
-	}
-});
+	);
+
+})( angular, Demo );

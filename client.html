@@ -1,29 +1,33 @@
-<!DOCTYPE html>
-<html lang=en xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang=en xmlns="http://www.w3.org/1999/xhtml" ng-app="Demo" ng-controller="AppController">
 <head>
 	<meta charset=utf-8>
 	<title>Test Json RPC</title>
 
 	<meta name=viewport content="width=980">
    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-   <script data-main="js/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.3/angular.min.js"></script>
+   <script src="/js/app.js"></script>
+   <script src="/js/ws.js"></script>
+   <script src="/js/ctrl.js"></script>
+</head>
 
 <body style="background-color: #e3e3e3">
-      <h1>WebSocket Arith Test</h1>
-      <form>
-         <p>
-            A: <input id="A" type="text" value="6">
-         </p>
-         <p>
-            Multiply <input id="method" name="method" type="radio" value="Multiply" checked />
-            <br />
-            Divide <input id="method" name="method" type="radio" value="Divide" />
-         </p>
-         <p>
-            B: <input id="B" type="text" value="4">
-         </p>
-         <p>
-            Equal <input id="answer" type="text" value="" readonly />
-         </p>
-      </form>
-      <button id="Calculate">Calculate</button>
+   <h1>WebSocket Arith Test</h1>
+   <form>
+      <p>
+         A: <input id="A" type="text" value="6">
+      </p>
+      <p>
+         Multiply <input id="method" name="method" type="radio" value="Multiply" checked />
+         <br />
+         Divide <input id="method" name="method" type="radio" value="Divide" />
+      </p>
+      <p>
+         B: <input id="B" type="text" value="4">
+      </p>
+      <p>
+         Equal <input id="answer" type="text" value="" readonly />
+      </p>
+      <button ng-click="Calculate();">Calculate</button>
+   </form>
